@@ -252,4 +252,242 @@
         <div><span class="kicker">The menu</span><h2>Something for every mood.</h2></div>
         <label class="veg"><input type="checkbox" id="vegOnly"><span class="sw"></span>Veg only</label>
       </div>
-      <div class="tabs reveal" role="tablist" aria-label="Menu categories" id="t
+      <div class="tabs reveal" role="tablist" aria-label="Menu categories" id="tabs"></div>
+      <div class="items" id="items" role="tabpanel" aria-live="polite"></div>
+      <div class="special reveal" id="special"></div>
+    </div>
+  </section>
+
+  <section id="gallery">
+    <div class="wrap">
+      <div class="reveal"><span class="kicker">Gallery</span><h2>A peek inside.</h2><p class="sub">Golden-hour light, steaming cups and the corner everyone fights over.</p></div>
+      <div class="gallery reveal">
+        <div class="g g1 w2 h2">☕<span>Morning rush, slowed down</span></div>
+        <div class="g g2">🌿<span>Courtyard</span></div>
+        <div class="g g3">📚<span>Reading nook</span></div>
+        <div class="g g4 w2">🥞<span>Sunday brunch</span></div>
+        <div class="g g5">🍃<span>Fresh mint lemonade</span></div>
+        <div class="g g6">🍰<span>Dessert counter</span></div>
+      </div>
+      <p class="note">Illustrative tiles. Replace them with your own photos for the real café.</p>
+    </div>
+  </section>
+
+  <section class="visit" id="visit">
+    <div class="wrap visit-grid">
+      <div class="reveal">
+        <span class="kicker">Visit us</span>
+        <h2>Come as you are.</h2>
+        <p class="sub">Walk in any time, or reserve a table for groups, birthdays and quiet date evenings.</p>
+        <div class="info">
+          <div><h3>Find us</h3><address style="font-style:normal" id="addr"></address>
+            <div class="map"><span id="mapTxt"></span><a class="btn alt" id="mapBtn" target="_blank" rel="noopener" href="#">Open in Maps ↗</a></div></div>
+          <div><h3>Opening hours</h3><table class="hours" id="hoursTbl"></table></div>
+          <div><h3>Say hello</h3><p id="contactTxt"></p></div>
+        </div>
+      </div>
+
+      <div class="formcard reveal" id="reserve">
+        <form id="resForm" novalidate>
+          <h3>Reserve a table</h3>
+          <p>Tell us when and how many. We'll keep a spot warm.</p>
+          <div class="fgrid">
+            <div class="full" data-f="name"><label for="rName">Your name</label><input type="text" id="rName" autocomplete="name" placeholder="e.g. Mansvi"><div class="err"></div></div>
+            <div class="full" data-f="phone"><label for="rPhone">Phone (WhatsApp)</label><input type="tel" id="rPhone" autocomplete="tel" inputmode="tel" placeholder="10-digit mobile number"><div class="err"></div></div>
+            <div data-f="date"><label for="rDate">Date</label><input type="date" id="rDate"><div class="err"></div></div>
+            <div data-f="time"><label for="rTime">Time</label><select id="rTime"></select><div class="err"></div></div>
+            <div class="full"><label id="gLbl">Guests</label>
+              <div class="stepper" role="group" aria-labelledby="gLbl"><button type="button" id="gMinus" aria-label="Fewer guests">−</button><output id="gOut" aria-live="polite">2 people</output><button type="button" id="gPlus" aria-label="More guests">+</button></div></div>
+          </div>
+          <button class="btn" type="submit">Request reservation</button>
+        </form>
+        <div class="confirm" id="confirm" role="status" aria-live="polite">
+          <div class="tick">✓</div>
+          <h3>Table requested!</h3>
+          <p id="confirmTxt"></p>
+          <a class="btn green" id="waBtn" target="_blank" rel="noopener" href="#" hidden>Confirm on WhatsApp</a>
+          <button class="link" id="again" type="button">Make another reservation</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <span><b id="footName">Aangan Café</b> · a fictional café · Day 04 / 07 of 7 days, 7 websites</span>
+  <span>Built with HTML, CSS &amp; vanilla JavaScript</span>
+</div></footer>
+
+<script>
+(() => {
+  /* ========= EDIT ME: swap in a real café's details ========= */
+  const CONFIG = {
+    name: 'Aangan Café',
+    tagline: 'A little courtyard café for long conversations, strong chai and food that tastes like home.',
+    address: ['12 Garden Road, Near the Old Mandir', 'Chhatarpur, Madhya Pradesh'],
+    phone: '',            // shown on the page, e.g. '+91 98765 43210'
+    whatsapp: '',         // digits only with country code, e.g. '919876543210'. Enables "Confirm on WhatsApp".
+    email: '',
+    mapsQuery: 'Aangan Café, Chhatarpur',
+    hours: [ // Sun..Sat, [openHour, closeHour] in 24h
+      [8, 22], [8, 22], [8, 22], [8, 22], [8, 22], [8, 23], [8, 23]
+    ],
+    maxGuests: 12
+  };
+
+  const MENU = {
+    'Chai & Coffee': [
+      { n: 'Kulhad Masala Chai', d: 'Slow-simmered with ginger, cardamom and a pinch of love.', p: 40, fav: 1 },
+      { n: 'Adrak Elaichi Chai', d: 'The classic. Strong, sweet, steaming.', p: 30 },
+      { n: 'Cold Coffee', d: 'Thick, chilled and blended with ice cream.', p: 110 },
+      { n: 'Filter Coffee', d: 'South-Indian style, frothy and bold.', p: 70 },
+      { n: 'Fresh Mint Lemonade', d: 'Cooling, sharp and a little sweet.', p: 80 },
+      { n: 'Haldi Doodh', d: 'Golden turmeric milk with black pepper.', p: 70 }
+    ],
+    'Snacks': [
+      { n: 'Bombay Veg Sandwich', d: 'Toasted, layered with chutney, potato and beetroot.', p: 90, fav: 1 },
+      { n: 'Masala Maggi', d: 'Late-night comfort with veggies and extra masala.', p: 70 },
+      { n: 'Paneer Tikka Roll', d: 'Charred paneer, mint chutney, onions, wrapped hot.', p: 130 },
+      { n: 'Crispy Corn Chaat', d: 'Crunchy corn, lime, chaat masala, green chilli.', p: 100 },
+      { n: 'Egg Bhurji Pav', d: 'Spicy scrambled eggs with buttery pav.', p: 90, egg: 1 },
+      { n: 'Peri-Peri Fries', d: 'Hot, salty, with garlic dip.', p: 99 }
+    ],
+    'Meals': [
+      { n: 'Dal Tadka Rice Bowl', d: 'Smoky dal, jeera rice, pickle and papad.', p: 150, fav: 1 },
+      { n: 'Rajma Chawal', d: 'Creamy kidney beans over steamed rice.', p: 140 },
+      { n: 'Paneer Butter Masala Thali', d: 'Paneer, dal, rice, two rotis and salad.', p: 210 },
+      { n: 'Veg Pulao & Raita', d: 'Fragrant rice with seasonal vegetables.', p: 130 },
+      { n: 'Butter Chicken Combo', d: 'Rich gravy with two butter naan and salad.', p: 240, egg: 'nv' }
+    ],
+    'Desserts': [
+      { n: 'Gulab Jamun with Ice Cream', d: 'Warm jamuns, cold vanilla. Don’t overthink it.', p: 100, fav: 1 },
+      { n: 'Chocolate Brownie', d: 'Fudgy, with a molten centre.', p: 110, egg: 1 },
+      { n: 'Kulhad Kulfi', d: 'Slow-frozen malai kulfi, served in a clay cup.', p: 90 },
+      { n: 'Mango Cheesecake Jar', d: 'Layered, creamy and chilled.', p: 120, egg: 1 }
+    ]
+  };
+  const SPECIALS = [ // by weekday, Sun..Sat
+    ['🥞', 'Sunday Brunch Plate', 'Pancakes, fruit, masala omelette and a free chai.'],
+    ['🍝', 'Monday Pasta Day', 'Creamy white-sauce pasta with garlic bread at a friendly price.'],
+    ['🌮', 'Taco Tuesday', 'Two loaded veg tacos and a mint lemonade.'],
+    ['🥪', 'Wednesday Sandwich Swap', 'Pick any sandwich, upgrade to a combo for ₹40.'],
+    ['🍵', 'Thursday Chai Flight', 'Taste three chai flavours in mini kulhads.'],
+    ['🎶', 'Friday Open-Mic Evening', 'Live music from 7 pm. Come hungry, stay late.'],
+    ['🍰', 'Saturday Dessert Duo', 'Any two desserts at a special combo price.']
+  ];
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const h12 = h => { const x = h % 12 || 12; return x + (h % 24 < 12 ? ' am' : ' pm'); };
+
+  /* fill static bits */
+  document.title = CONFIG.name + ' · Chai, courtyard & slow afternoons';
+  $('#navName').textContent = CONFIG.name; $('#footName').textContent = CONFIG.name; $('#tagline').textContent = CONFIG.tagline;
+  $('#addr').innerHTML = CONFIG.address.map(esc).join('<br>');
+  $('#mapTxt').textContent = CONFIG.address[0];
+  $('#mapBtn').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(CONFIG.mapsQuery);
+  const contact = [CONFIG.phone && 'Call ' + CONFIG.phone, CONFIG.email, CONFIG.whatsapp && 'WhatsApp us anytime'].filter(Boolean);
+  $('#contactTxt').textContent = contact.length ? contact.join(' · ') : 'Phone and email coming soon. Drop by and say hi!';
+
+  /* nav */
+  const nav = $('#nav'), links = $('#links'), burger = $('#burger');
+  const onScroll = () => nav.classList.toggle('solid', scrollY > 40);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  burger.addEventListener('click', () => { const o = links.classList.toggle('open'); burger.setAttribute('aria-expanded', o); nav.classList.toggle('solid', o || scrollY > 40); });
+  links.addEventListener('click', e => { if (e.target.closest('a')) { links.classList.remove('open'); burger.setAttribute('aria-expanded', false); onScroll(); } });
+
+  /* open-now status + hours table */
+  function isOpen(now) {
+    const [o, c] = CONFIG.hours[now.getDay()], h = now.getHours() + now.getMinutes() / 60;
+    return { open: h >= o && h < c, o, c };
+  }
+  function renderStatus() {
+    const now = new Date(), s = isOpen(now), el = $('#status');
+    el.classList.toggle('open', s.open);
+    $('#statusTxt').textContent = s.open ? `Open now · closes ${h12(s.c)}` : (now.getHours() < s.o ? `Closed · opens today at ${h12(s.o)}` : `Closed · opens tomorrow at ${h12(CONFIG.hours[(now.getDay() + 1) % 7][0])}`);
+  }
+  renderStatus(); setInterval(renderStatus, 60000);
+  const today = new Date().getDay();
+  $('#hoursTbl').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => `<tr class="${d === today ? 'today' : ''}"><td>${DAYS[d]}</td><td>${h12(CONFIG.hours[d][0])} – ${h12(CONFIG.hours[d][1])}</td></tr>`).join('');
+
+  /* menu */
+  const cats = Object.keys(MENU);
+  let cat = cats[0];
+  const tabs = $('#tabs'), itemsEl = $('#items'), veg = $('#vegOnly');
+  tabs.innerHTML = cats.map(c => `<button class="tab" role="tab" aria-selected="${c === cat}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  function renderMenu() {
+    $$('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.c === cat));
+    const list = MENU[cat].filter(i => !veg.checked || (!i.egg));
+    itemsEl.innerHTML = list.length ? list.map((i, k) => `
+      <div class="item" style="animation-delay:${k * 50}ms">
+        <div class="top"><span class="vdot ${i.egg === 'nv' ? 'nv' : i.egg ? 'nv' : ''}" title="${i.egg ? 'Non-veg / contains egg' : 'Vegetarian'}"></span><h3>${esc(i.n)}${i.fav ? '<span class="badge fav">Favourite</span>' : ''}${i.egg === 1 ? '<span class="badge egg">Egg</span>' : ''}</h3><span class="dots"></span><span class="price">₹${i.p}</span></div>
+        <p>${esc(i.d)}</p></div>`).join('') : '<p class="empty">Nothing matches that filter in this section. Try another category!</p>';
+  }
+  tabs.addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) { cat = b.dataset.c; renderMenu(); } });
+  tabs.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    const i = cats.indexOf(cat), n = (i + (e.key === 'ArrowRight' ? 1 : cats.length - 1)) % cats.length;
+    cat = cats[n]; renderMenu(); $$('.tab')[n].focus();
+  });
+  veg.addEventListener('change', renderMenu); renderMenu();
+  const sp = SPECIALS[today];
+  $('#special').innerHTML = `<div class="emo" aria-hidden="true">${sp[0]}</div><div><small>Today's special · ${DAYS[today]}</small><h3>${esc(sp[1])}</h3><p>${esc(sp[2])}</p></div>`;
+
+  /* reservation */
+  const dateEl = $('#rDate'), timeEl = $('#rTime');
+  const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  dateEl.min = ymd(new Date()); dateEl.value = ymd(new Date());
+  function slots() {
+    const d = dateEl.value ? new Date(dateEl.value + 'T00:00') : new Date();
+    const [o, c] = CONFIG.hours[d.getDay()], now = new Date(), isToday = ymd(d) === ymd(now), out = [];
+    for (let m = o * 60; m <= c * 60 - 60; m += 30) {
+      if (isToday && m <= now.getHours() * 60 + now.getMinutes() + 29) continue;
+      out.push(m);
+    }
+    const label = m => { const h = Math.floor(m / 60), mm = String(m % 60).padStart(2, '0'); return (h % 12 || 12) + ':' + mm + (h < 12 ? ' am' : ' pm'); };
+    timeEl.innerHTML = out.length ? out.map(m => `<option value="${m}">${label(m)}</option>`).join('') : '<option value="">No slots left today</option>';
+    return label;
+  }
+  let label = slots();
+  dateEl.addEventListener('change', () => { label = slots(); });
+
+  let guests = 2;
+  const gOut = $('#gOut');
+  const setG = n => { guests = Math.min(CONFIG.maxGuests, Math.max(1, n)); gOut.textContent = guests + (guests === 1 ? ' person' : ' people'); };
+  $('#gMinus').addEventListener('click', () => setG(guests - 1)); $('#gPlus').addEventListener('click', () => setG(guests + 1));
+
+  const form = $('#resForm'), conf = $('#confirm');
+  function setErr(f, msg) { const w = form.querySelector(`[data-f="${f}"]`); w.classList.toggle('invalid', !!msg); w.querySelector('.err').textContent = msg || ''; return !msg; }
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = $('#rName').value.trim(), phone = $('#rPhone').value.replace(/[\s-]/g, ''), time = timeEl.value;
+    let ok = true;
+    ok = setErr('name', name.length < 2 ? 'Please tell us your name.' : '') && ok;
+    ok = setErr('phone', !/^(\+?91)?[6-9]\d{9}$/.test(phone) ? 'Enter a valid 10-digit Indian mobile number.' : '') && ok;
+    ok = setErr('date', !dateEl.value || dateEl.value < dateEl.min ? 'Pick today or a future date.' : '') && ok;
+    ok = setErr('time', !time ? 'Pick another date, no slots left.' : '') && ok;
+    if (!ok) { const bad = form.querySelector('.invalid input, .invalid select'); if (bad) bad.focus(); return; }
+    const d = new Date(dateEl.value + 'T00:00');
+    const when = `${DAYS[d.getDay()]}, ${d.getDate()} ${d.toLocaleString('en-IN', { month: 'short' })} at ${label(+time)}`;
+    $('#confirmTxt').textContent = `Thanks, ${name}! We've noted a table for ${guests} on ${when}. ` + (CONFIG.whatsapp ? 'Tap below to send the details to us on WhatsApp and we\'ll confirm.' : '(This is a demo, so nothing was sent or saved.)');
+    const wa = $('#waBtn');
+    if (CONFIG.whatsapp) {
+      wa.hidden = false;
+      wa.href = 'https://wa.me/' + CONFIG.whatsapp.replace(/\D/g, '') + '?text=' + encodeURIComponent(`Hi ${CONFIG.name}! I'd like to reserve a table for ${guests} on ${when}. Name: ${name}. Phone: ${phone}.`);
+    } else wa.hidden = true;
+    form.style.display = 'none'; conf.classList.add('show');
+  });
+  $('#again').addEventListener('click', () => { conf.classList.remove('show'); form.style.display = ''; form.reset(); dateEl.value = ymd(new Date()); label = slots(); setG(2); });
+
+  /* reveal */
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if ('IntersectionObserver' in window && !reduce) {
+    const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { threshold: 0.1 });
+    $$('.reveal').forEach(el => io.observe(el));
+  } else $$('.reveal').forEach(el => el.classList.add('in'));
+})();
+</script>
+</body>
+</html>
